@@ -1,0 +1,70 @@
+object FrmMain: TFrmMain
+  Left = 316
+  Height = 309
+  Top = 154
+  Width = 504
+  Caption = 'Wallet info demo'
+  ClientHeight = 309
+  ClientWidth = 504
+  DesignTimePPI = 120
+  LCLVersion = '2.2.0.4'
+  object EdtAddress: TLabeledEdit
+    Left = 24
+    Height = 28
+    Top = 40
+    Width = 448
+    EditLabel.Height = 20
+    EditLabel.Width = 448
+    EditLabel.Caption = 'Address'
+    TabOrder = 0
+  end
+  object BtnGet: TButton
+    Left = 24
+    Height = 31
+    Top = 80
+    Width = 94
+    Caption = 'Get'
+    OnClick = BtnGetClick
+    TabOrder = 1
+  end
+  object EdtBalance: TLabeledEdit
+    Left = 24
+    Height = 28
+    Top = 160
+    Width = 208
+    EditLabel.Height = 20
+    EditLabel.Width = 208
+    EditLabel.Caption = 'Balance, TONCoin'
+    TabOrder = 2
+  end
+  object EdtState: TLabeledEdit
+    Left = 24
+    Height = 28
+    Top = 232
+    Width = 208
+    EditLabel.Height = 20
+    EditLabel.Width = 208
+    EditLabel.Caption = 'State'
+    TabOrder = 3
+  end
+  object EdtCode: TLabeledEdit
+    Left = 264
+    Height = 28
+    Top = 160
+    Width = 208
+    EditLabel.Height = 20
+    EditLabel.Width = 208
+    EditLabel.Caption = 'Code'
+    TabOrder = 4
+  end
+  object EdtData: TLabeledEdit
+    Left = 264
+    Height = 28
+    Top = 232
+    Width = 208
+    EditLabel.Height = 20
+    EditLabel.Width = 208
+    EditLabel.Caption = 'Data'
+    TabOrder = 5
+  end
+end
