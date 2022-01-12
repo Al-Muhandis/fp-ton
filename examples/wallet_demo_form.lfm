@@ -30,8 +30,8 @@ object FrmMain: TFrmMain
   end
   object PgCntrl: TPageControl
     Left = 0
-    Height = 281
-    Top = 114
+    Height = 283
+    Top = 112
     Width = 490
     ActivePage = TbShtResult
     Align = alBottom
@@ -40,7 +40,7 @@ object FrmMain: TFrmMain
     TabOrder = 2
     object TbShtResult: TTabSheet
       Caption = 'Result'
-      ClientHeight = 248
+      ClientHeight = 250
       ClientWidth = 482
       object EdtBalance: TLabeledEdit
         Left = 24
@@ -93,7 +93,7 @@ object FrmMain: TFrmMain
     end
     object TbShtError: TTabSheet
       Caption = 'Error'
-      ClientHeight = 248
+      ClientHeight = 250
       ClientWidth = 482
       object EdtErrorCode: TLabeledEdit
         Left = 16
@@ -122,16 +122,17 @@ object FrmMain: TFrmMain
     end
     object TabSheet1: TTabSheet
       Caption = 'Raw responce'
-      ClientHeight = 248
+      ClientHeight = 250
       ClientWidth = 482
       object MmResponce: TMemo
         Left = 0
-        Height = 248
+        Height = 250
         Top = 0
         Width = 482
         Align = alClient
         Color = clBtnFace
         ReadOnly = True
+        ScrollBars = ssAutoBoth
         TabOrder = 0
       end
     end
