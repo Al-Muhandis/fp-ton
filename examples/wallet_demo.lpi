@@ -110,6 +110,7 @@
         <Filename Value="wallet_demo_form.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="FrmMain"/>
+        <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
       </Unit>
       <Unit>

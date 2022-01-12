@@ -1,10 +1,10 @@
 object FrmMain: TFrmMain
   Left = 316
-  Height = 307
+  Height = 395
   Top = 154
   Width = 490
   Caption = 'Wallet info demo'
-  ClientHeight = 307
+  ClientHeight = 395
   ClientWidth = 490
   DesignTimePPI = 120
   SessionProperties = 'EdtAddress.Text'
@@ -30,7 +30,7 @@ object FrmMain: TFrmMain
   end
   object PgCntrl: TPageControl
     Left = 0
-    Height = 193
+    Height = 281
     Top = 114
     Width = 490
     ActivePage = TbShtResult
@@ -40,7 +40,7 @@ object FrmMain: TFrmMain
     TabOrder = 2
     object TbShtResult: TTabSheet
       Caption = 'Result'
-      ClientHeight = 160
+      ClientHeight = 248
       ClientWidth = 482
       object EdtBalance: TLabeledEdit
         Left = 24
@@ -93,7 +93,7 @@ object FrmMain: TFrmMain
     end
     object TbShtError: TTabSheet
       Caption = 'Error'
-      ClientHeight = 160
+      ClientHeight = 248
       ClientWidth = 482
       object EdtErrorCode: TLabeledEdit
         Left = 16
@@ -118,6 +118,21 @@ object FrmMain: TFrmMain
         EditLabel.Caption = 'Description'
         ReadOnly = True
         TabOrder = 1
+      end
+    end
+    object TabSheet1: TTabSheet
+      Caption = 'Raw responce'
+      ClientHeight = 248
+      ClientWidth = 482
+      object MmResponce: TMemo
+        Left = 0
+        Height = 248
+        Top = 0
+        Width = 482
+        Align = alClient
+        Color = clBtnFace
+        ReadOnly = True
+        TabOrder = 0
       end
     end
   end

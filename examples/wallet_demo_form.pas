@@ -22,7 +22,9 @@ type
     EdtCode: TLabeledEdit;
     EdtData: TLabeledEdit;
     IniPrpStrg: TIniPropStorage;
+    MmResponce: TMemo;
     PgCntrl: TPageControl;
+    TabSheet1: TTabSheet;
     TbShtError: TTabSheet;
     TbShtResult: TTabSheet;
     procedure BtnGetClick({%H-}Sender: TObject);
@@ -48,8 +50,7 @@ uses
 procedure TFrmMain.BtnGetClick(Sender: TObject);
 var
   aResponce: TgetAddressInformationResult;
-  aCode: Integer;
-  aError: String;
+  aTON: TTonAPI;
 begin
   EdtBalance.Text:=EmptyStr;
   EdtCode.Text:=EmptyStr;
@@ -57,8 +58,9 @@ begin
   EdtError.Text:=EmptyStr;
   EdtErrorCode.Text:=EmptyStr;
   aResponce:=TgetAddressInformationResult.Create;
+  aTON:=TTonAPI.Create;
   try
-    if TTonAPI.getAddressInformation(EdtAddress.Text, aResponce, aCode, aError) then
+    if aTON.getAddressInformation(EdtAddress.Text, aResponce) then
     begin
       PgCntrl.ActivePage:=TbShtResult;
       EdtBalance.Text:=(aResponce.balance/1e9).ToString;
@@ -68,10 +70,12 @@ begin
     end
     else begin
       PgCntrl.ActivePage:=TbShtError;
-      EdtError.Text:=aError;
-      EdtErrorCode.Text:=aCode.ToString;
+      EdtError.Text:=aTON.ErrorDescription;
+      EdtErrorCode.Text:=aTON.ErrorCode.ToString;
     end;
+    MmResponce.Lines.Text:=aTON.RawResponce.FormatJSON();
   finally
+    aTON.Free;
     aResponce.Free;
   end;
 end;

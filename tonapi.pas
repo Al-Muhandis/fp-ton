@@ -29,13 +29,22 @@ type
 
   TTonAPI = class
   private
-    class function APIMethod(const aUrl: String; aResponce: TObject; out aCode: Integer; out aError: String): Boolean;
+    FCode: Integer;
+    FError: String;
+    FRawResponce: TJSONObject;                                                                                        
+    function APIMethod(const aUrl: String; aResponce: TObject): Boolean;
   public
-    class function getAddressInformation(const aAddress: String; aResponce: TgetAddressInformationResult;
-      out aCode: Integer; out aError: String): Boolean;
+    destructor Destroy; override;
+    function getAddressInformation(const aAddress: String; aResult: TgetAddressInformationResult): Boolean;
+    property ErrorCode: Integer read FCode;
+    property ErrorDescription: String read FError;
+    property RawResponce: TJSONObject read FRawResponce;
   end;
 
+  { Procedure style }
 
+function getAddressInformation(const aAddress: String; aResult: TgetAddressInformationResult;
+  out aCode: Integer; out aError: String): Boolean;
 
 implementation
 
@@ -51,41 +60,57 @@ begin
   Result:=Format(_APIENDPOINT+aMethod+'?address=%s', [aAddress]);
 end;
 
-{ TTonAPI }
-
-class function TTonAPI.APIMethod(const aUrl: String; aResponce: TObject; out aCode: Integer; out aError: String
-  ): Boolean;
+function getAddressInformation(const aAddress: String; aResult: TgetAddressInformationResult; out aCode: Integer; out
+  aError: String): Boolean;
 var
-  aDestreamer: TJSONDeStreamer;
-  aJSONObject: TJSONObject;
+  aTON: TTonAPI;
 begin
-  Result:=False;
-  aError:=EmptyStr;
-  aCode:=0;
+  aTON:=TTonAPI.Create;
   try
-    aJSONObject:=GetJSON(TFPHTTPClient.SimpleGet(aUrl)) as TJSONObject;
-    if not aJSONObject.Booleans['ok'] then
-    begin
-      aError:=aJSONObject.Get('error', EmptyStr);
-      aCode:=aJSONObject.Get('code', 0);
-      Exit;
-    end;
-    aDestreamer:=TJSONDeStreamer.Create(nil);
-    try
-      aDestreamer.JSONToObject(aJSONObject.Objects['result'], aResponce);
-      Result:=True;
-    finally
-      aDestreamer.Free;
-    end;
-  finally
-    aJSONObject.Free;
+    Result:=aTON.getAddressInformation(aAddress, aResult);
+    aCode:=aTON.ErrorCode;
+    aError:=aTON.ErrorDescription;
+  finally   
+    aTON.Free;
   end;
 end;
 
-class function TTonAPI.getAddressInformation(const aAddress: String; aResponce: TgetAddressInformationResult;
-  out aCode: Integer; out aError: String): Boolean;
+{ TTonAPI }
+
+function TTonAPI.APIMethod(const aUrl: String; aResponce: TObject): Boolean;
+var
+  aDestreamer: TJSONDeStreamer;
 begin
-  Result:=APIMethod(RoteEndpoint('getAddressInformation', aAddress), aResponce, aCode, aError);
+  Result:=False;
+  FError:=EmptyStr;
+  FCode:=0;
+  FreeAndNil(FRawResponce);
+  FRawResponce:=GetJSON(TFPHTTPClient.SimpleGet(aUrl)) as TJSONObject;
+  if not FRawResponce.Booleans['ok'] then
+  begin
+    FError:=FRawResponce.Get('error', EmptyStr);
+    FCode:=FRawResponce.Get('code', 0);
+    Exit;
+  end;
+  aDestreamer:=TJSONDeStreamer.Create(nil);
+  try
+    aDestreamer.JSONToObject(FRawResponce.Objects['result'], aResponce);
+    Result:=True;
+  finally
+    aDestreamer.Free;
+  end;
+end;
+
+destructor TTonAPI.Destroy;
+begin
+  FRawResponce.Free;
+  inherited Destroy;
+end;
+
+function TTonAPI.getAddressInformation(const aAddress: String; aResult: TgetAddressInformationResult): Boolean;
+begin
+  FreeAndNil(FRawResponce);
+  Result:=APIMethod(RoteEndpoint('getAddressInformation', aAddress), aResult);
 end;
 
 end.
