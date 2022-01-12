@@ -10,7 +10,7 @@ uses
   athreads,
   {$ENDIF}
   Interfaces, // this includes the LCL widgetset
-  Forms, wallet_demo_form, tonapi
+  Forms, wallet_demo_form
   { you can add units after this };
 
 {$R *.res}

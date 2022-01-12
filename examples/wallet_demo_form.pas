@@ -5,7 +5,8 @@ unit wallet_demo_form;
 interface
 
 uses
-  Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ExtCtrls, StdCtrls, Spin;
+  Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ExtCtrls, StdCtrls, IniPropStorage, ComCtrls
+  ;
 
 type
 
@@ -15,10 +16,16 @@ type
     BtnGet: TButton;
     EdtAddress: TLabeledEdit;
     EdtBalance: TLabeledEdit;
+    EdtErrorCode: TLabeledEdit;
+    EdtError: TLabeledEdit;
     EdtState: TLabeledEdit;
     EdtCode: TLabeledEdit;
     EdtData: TLabeledEdit;
-    procedure BtnGetClick(Sender: TObject);
+    IniPrpStrg: TIniPropStorage;
+    PgCntrl: TPageControl;
+    TbShtError: TTabSheet;
+    TbShtResult: TTabSheet;
+    procedure BtnGetClick({%H-}Sender: TObject);
   private
 
   public
@@ -44,12 +51,25 @@ var
   aCode: Integer;
   aError: String;
 begin
+  EdtBalance.Text:=EmptyStr;
+  EdtCode.Text:=EmptyStr;
+  EdtData.Text:=EmptyStr;
+  EdtError.Text:=EmptyStr;
+  EdtErrorCode.Text:=EmptyStr;
   aResponce:=TgetAddressInformationResult.Create;
   try
-    TTonAPI.getAddressInformation(EdtAddress.Text, aResponce, aCode, aError);
-    EdtBalance.Text:=(aResponce.balance/1e9).ToString;
-    EdtCode.Text:=aResponce.code;
-    EdtData.Text:=aResponce.data;
+    if TTonAPI.getAddressInformation(EdtAddress.Text, aResponce, aCode, aError) then
+    begin
+      PgCntrl.ActivePage:=TbShtResult;
+      EdtBalance.Text:=(aResponce.balance/1e9).ToString;
+      EdtCode.Text:=aResponce.code;
+      EdtData.Text:=aResponce.data;
+    end
+    else begin
+      PgCntrl.ActivePage:=TbShtError;
+      EdtError.Text:=aError;
+      EdtErrorCode.Text:=aCode.ToString;
+    end;
   finally
     aResponce.Free;
   end;

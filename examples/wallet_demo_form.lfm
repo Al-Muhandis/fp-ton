@@ -1,12 +1,13 @@
 object FrmMain: TFrmMain
   Left = 316
-  Height = 309
+  Height = 307
   Top = 154
-  Width = 504
+  Width = 490
   Caption = 'Wallet info demo'
-  ClientHeight = 309
-  ClientWidth = 504
+  ClientHeight = 307
+  ClientWidth = 490
   DesignTimePPI = 120
+  SessionProperties = 'EdtAddress.Text'
   LCLVersion = '2.2.0.4'
   object EdtAddress: TLabeledEdit
     Left = 24
@@ -21,50 +22,108 @@ object FrmMain: TFrmMain
   object BtnGet: TButton
     Left = 24
     Height = 31
-    Top = 80
+    Top = 72
     Width = 94
     Caption = 'Get'
     OnClick = BtnGetClick
     TabOrder = 1
   end
-  object EdtBalance: TLabeledEdit
-    Left = 24
-    Height = 28
-    Top = 160
-    Width = 208
-    EditLabel.Height = 20
-    EditLabel.Width = 208
-    EditLabel.Caption = 'Balance, TONCoin'
+  object PgCntrl: TPageControl
+    Left = 0
+    Height = 193
+    Top = 114
+    Width = 490
+    ActivePage = TbShtResult
+    Align = alBottom
+    Anchors = [akTop]
+    TabIndex = 0
     TabOrder = 2
+    object TbShtResult: TTabSheet
+      Caption = 'Result'
+      ClientHeight = 160
+      ClientWidth = 482
+      object EdtBalance: TLabeledEdit
+        Left = 24
+        Height = 28
+        Top = 40
+        Width = 208
+        Color = clBtnFace
+        EditLabel.Height = 20
+        EditLabel.Width = 208
+        EditLabel.Caption = 'Balance, TONCoin'
+        ReadOnly = True
+        TabOrder = 0
+      end
+      object EdtState: TLabeledEdit
+        Left = 24
+        Height = 28
+        Top = 104
+        Width = 208
+        Color = clBtnFace
+        EditLabel.Height = 20
+        EditLabel.Width = 208
+        EditLabel.Caption = 'State'
+        ReadOnly = True
+        TabOrder = 1
+      end
+      object EdtCode: TLabeledEdit
+        Left = 256
+        Height = 28
+        Top = 40
+        Width = 208
+        Color = clBtnFace
+        EditLabel.Height = 20
+        EditLabel.Width = 208
+        EditLabel.Caption = 'Code'
+        ReadOnly = True
+        TabOrder = 2
+      end
+      object EdtData: TLabeledEdit
+        Left = 256
+        Height = 28
+        Top = 104
+        Width = 208
+        Color = clBtnFace
+        EditLabel.Height = 20
+        EditLabel.Width = 208
+        EditLabel.Caption = 'Data'
+        ReadOnly = True
+        TabOrder = 3
+      end
+    end
+    object TbShtError: TTabSheet
+      Caption = 'Error'
+      ClientHeight = 160
+      ClientWidth = 482
+      object EdtErrorCode: TLabeledEdit
+        Left = 16
+        Height = 28
+        Top = 104
+        Width = 112
+        Color = clBtnFace
+        EditLabel.Height = 20
+        EditLabel.Width = 112
+        EditLabel.Caption = 'Code'
+        ReadOnly = True
+        TabOrder = 0
+      end
+      object EdtError: TLabeledEdit
+        Left = 16
+        Height = 28
+        Top = 40
+        Width = 456
+        Color = clBtnFace
+        EditLabel.Height = 20
+        EditLabel.Width = 456
+        EditLabel.Caption = 'Description'
+        ReadOnly = True
+        TabOrder = 1
+      end
+    end
   end
-  object EdtState: TLabeledEdit
-    Left = 24
-    Height = 28
-    Top = 232
-    Width = 208
-    EditLabel.Height = 20
-    EditLabel.Width = 208
-    EditLabel.Caption = 'State'
-    TabOrder = 3
-  end
-  object EdtCode: TLabeledEdit
-    Left = 264
-    Height = 28
-    Top = 160
-    Width = 208
-    EditLabel.Height = 20
-    EditLabel.Width = 208
-    EditLabel.Caption = 'Code'
-    TabOrder = 4
-  end
-  object EdtData: TLabeledEdit
-    Left = 264
-    Height = 28
-    Top = 232
-    Width = 208
-    EditLabel.Height = 20
-    EditLabel.Width = 208
-    EditLabel.Caption = 'Data'
-    TabOrder = 5
+  object IniPrpStrg: TIniPropStorage
+    StoredValues = <>
+    Left = 227
+    Top = 111
   end
 end
