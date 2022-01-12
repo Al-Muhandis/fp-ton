@@ -64,6 +64,7 @@ begin
       EdtBalance.Text:=(aResponce.balance/1e9).ToString;
       EdtCode.Text:=aResponce.code;
       EdtData.Text:=aResponce.data;
+      EdtState.Text:=aResponce.state;
     end
     else begin
       PgCntrl.ActivePage:=TbShtError;
