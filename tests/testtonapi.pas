@@ -5,34 +5,69 @@ unit testtonapi;
 interface
 
 uses
-  Classes, SysUtils, fpcunit, testutils, testregistry;
+  Classes, SysUtils, fpcunit, testregistry, tonapi;
 
 type
 
+  { TTestTONAPI }
+
   TTestTONAPI= class(TTestCase)
+  private
+    FTONAPI: TTonAPI;
+  protected
+    procedure SetUp; override;
+    procedure TearDown; override;
   published
-    procedure getAddressInformation;
+    procedure getAddressInformation; 
+    procedure getTransactions;
   end;
 
 implementation
 
 uses
-  tonapi
+  fpjson, config
   ;
+
+procedure TTestTONAPI.SetUp;
+begin
+  FTONAPI:=TTonAPI.Create;
+end;
+
+procedure TTestTONAPI.TearDown;
+var
+  aResponce: TStringList;
+begin
+  aResponce:=TStringList.Create;
+  try
+    aResponce.Text:=FTONAPI.RawResponce.FormatJSON;
+    aResponce.SaveToFile('~responce.json');
+  finally                                  
+    aResponce.Free;
+    FTONAPI.Free;
+  end;
+end;
 
 procedure TTestTONAPI.getAddressInformation;
 var
   aResult: TgetAddressInformationResult;
-  aCode: Integer;
-  aError: String;
 begin
   aResult:=TgetAddressInformationResult.Create;
   try
-    TTonAPI.getAddressInformation('0QCyt4ltzak71h6XkyK4ePfZCzJQDSVUNuvZ3VE7hP_Q-GTE', aResult, aCode, aError);
-    if not aError.IsEmpty then
-      Fail('Error: '+aError);
-  finally      
+    FTONAPI.getAddressInformation(_Config.Address, aResult);
+    if not FTONAPI.ErrorDescription.IsEmpty then
+      Fail('Error: '+FTONAPI.ErrorDescription);
+  finally
     aResult.Free;
+  end;
+end;
+
+procedure TTestTONAPI.getTransactions;
+begin
+  try
+    FTONAPI.getTransactions(_Config.Address);
+    if not FTONAPI.ErrorDescription.IsEmpty then
+      Fail('Error: '+FTONAPI.ErrorDescription);
+  finally
   end;
 end;
 

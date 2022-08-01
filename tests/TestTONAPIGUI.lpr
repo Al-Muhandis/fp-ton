@@ -3,7 +3,7 @@ program TestTONAPIGUI;
 {$mode objfpc}{$H+}
 
 uses
-  Interfaces, Forms, GuiTestRunner, testtonapi, tonapi;
+  Interfaces, Forms, GuiTestRunner, testtonapi, config;
 
 {$R *.res}
 
