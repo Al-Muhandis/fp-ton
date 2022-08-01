@@ -33,10 +33,12 @@ type
     FError: String;
     FRawResponce: TJSONObject;                                                                                        
     function APIMethod(const aUrl: String; aResponce: TObject = nil): Boolean;
+    function EndpointGet(const aUrl: String): String;
   public
     destructor Destroy; override;
     function getAddressInformation(const aAddress: String; aResult: TgetAddressInformationResult): Boolean; 
-    function getTransactions(const aAddress: String; aLimit: Integer = 10): Boolean;
+    function getTransactions(const aAddress: String; aLimit: Integer = 10;
+      aLT: Int64 = 0; const aHash: String = ''; aToLT: Int64 = 0; aArchival: Boolean = False): Boolean;
     property ErrorCode: Integer read FCode;
     property ErrorDescription: String read FError;
     property RawResponce: TJSONObject read FRawResponce;
@@ -63,6 +65,43 @@ begin
     Result:=Format(_APIENDPOINT+aMethod+'?address=%s', [aAddress])
   else
     Result:=Format(_APIENDPOINT+aMethod+'?address=%s&limit=%d', [aAddress, aLimit]);
+end;
+
+function RoteEndpoint(const aMethod: String; aGetParameters: TStrings): String;
+var
+  aGetS: String;
+begin
+  aGetParameters.StrictDelimiter:=True;
+  aGetParameters.Delimiter:='&';
+  aGetS:=aGetParameters.DelimitedText;
+  Result:=_APIENDPOINT+aMethod;
+  if not aGetS.IsEmpty then
+    Result+='?';
+  Result+=aGetS;
+end;
+
+function RoteGetTransactions(const aAddress: String; aLimit: Integer=0; aLogicalTime: Int64 = 0; aHash: String = '';
+  aLogicalTimeTo: Int64 = 0; aArchival: Boolean = False): String;
+var
+  aParameters: TStringList;
+begin
+  aParameters:=TStringList.Create;
+  try
+    aParameters.AddPair('address', aAddress);
+    if aLimit<>0 then
+      aParameters.AddPair('limit', aLimit.ToString);  
+    if aLogicalTime<>0 then
+      aParameters.AddPair('lt', aLogicalTime.ToString);
+    if aHash<>'' then
+      aParameters.AddPair('hash', EncodeURLElement(aHash));
+    if aLogicalTimeTo<>0 then
+      aParameters.AddPair('to_lt', aLogicalTimeTo.ToString);
+    if aArchival<>False then
+      aParameters.AddPair('archival', BoolToStr(aArchival, 'true', 'false'));
+    Result:=RoteEndpoint('getTransactions', aParameters);
+  finally
+    aParameters.Free;
+  end;
 end;
 
 function getAddressInformation(const aAddress: String; aResult: TgetAddressInformationResult; out aCode: Integer; out
@@ -100,12 +139,16 @@ end;
 function TTonAPI.APIMethod(const aUrl: String; aResponce: TObject): Boolean;
 var
   aDestreamer: TJSONDeStreamer;
+  S: String;
 begin
   Result:=False;
   FError:=EmptyStr;
   FCode:=0;
   FreeAndNil(FRawResponce);
-  FRawResponce:=GetJSON(TFPHTTPClient.SimpleGet(aUrl)) as TJSONObject;
+  S:=EndpointGet(aUrl);
+  if S.IsEmpty then
+    Exit;
+  FRawResponce:=GetJSON(S) as TJSONObject;
   if not FRawResponce.Booleans['ok'] then
   begin
     FError:=FRawResponce.Get('error', EmptyStr);
@@ -123,6 +166,21 @@ begin
   end;
 end;
 
+function TTonAPI.EndpointGet(const aUrl: String): String;
+var
+  aHTTP: TFPHTTPClient;
+begin
+  aHTTP:=TFPHTTPClient.Create(nil);
+  try
+    try
+      Result:=aHTTP.SimpleGet(aUrl);
+    except
+    end;
+  finally
+    aHTTP.Free;
+  end;
+end;
+
 destructor TTonAPI.Destroy;
 begin
   FRawResponce.Free;
@@ -135,10 +193,11 @@ begin
   Result:=APIMethod(RoteEndpoint('getAddressInformation', aAddress), aResult);
 end;
 
-function TTonAPI.getTransactions(const aAddress: String; aLimit: Integer): Boolean;
+function TTonAPI.getTransactions(const aAddress: String; aLimit: Integer; aLT: Int64; const aHash: String;
+  aToLT: Int64; aArchival: Boolean): Boolean;
 begin
   FreeAndNil(FRawResponce);
-  Result:=APIMethod(RoteEndpoint('getTransactions', aAddress, aLimit));
+  Result:=APIMethod(RoteGetTransactions(aAddress, aLimit, aLT, aHash, aToLT, aArchival));
 end;
 
 end.

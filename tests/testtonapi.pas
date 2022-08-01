@@ -64,7 +64,7 @@ end;
 procedure TTestTONAPI.getTransactions;
 begin
   try
-    FTONAPI.getTransactions(_Config.Address);
+    FTONAPI.getTransactions(_Config.Address, 1000, 30004045000003, 'IIsBy+4ukWS5sUfLFswI4hizURH77rERDY3Yr47laDo=');
     if not FTONAPI.ErrorDescription.IsEmpty then
       Fail('Error: '+FTONAPI.ErrorDescription);
   finally
