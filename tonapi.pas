@@ -50,6 +50,9 @@ function getAddressInformation(const aAddress: String; aResult: TgetAddressInfor
   out aCode: Integer; out aError: String): Boolean;
 function getTransactions(const aAddress: String; out aCode: Integer; out aError: String): Boolean;
 
+const
+  _adrsTonDns = 'EQC3dNlesgVD8YbAazcauIrXBPfiVhMMr5YYk2in0Mtsz0Bz';
+
 implementation
 
 uses
@@ -139,16 +142,12 @@ end;
 function TTonAPI.APIMethod(const aUrl: String; aResponce: TObject): Boolean;
 var
   aDestreamer: TJSONDeStreamer;
-  S: String;
 begin
   Result:=False;
   FError:=EmptyStr;
   FCode:=0;
   FreeAndNil(FRawResponce);
-  S:=EndpointGet(aUrl);
-  if S.IsEmpty then
-    Exit;
-  FRawResponce:=GetJSON(S) as TJSONObject;
+  FRawResponce:=GetJSON(EndpointGet(aUrl)) as TJSONObject;
   if not FRawResponce.Booleans['ok'] then
   begin
     FError:=FRawResponce.Get('error', EmptyStr);
