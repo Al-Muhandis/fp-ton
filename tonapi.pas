@@ -5,7 +5,7 @@ unit tonapi;
 interface
 
 uses
-  Classes, SysUtils, fpjson
+  Classes, SysUtils, fpjson, eventlog
   ;
 
 type
@@ -30,10 +30,13 @@ type
   TTonAPI = class
   private
     FCode: Integer;
+    FDebugLog: Boolean;
     FError: String;
+    FEventLog: TEventLog;
     FRawResponce: TJSONObject;                                                                                        
     function APIMethod(const aUrl: String; aResponce: TObject = nil): Boolean;
     function EndpointGet(const aUrl: String): String;
+    procedure Log(aEventType: TEventType; const aMessage: String);
   public
     destructor Destroy; override;
     function getAddressInformation(const aAddress: String; aResult: TgetAddressInformationResult): Boolean; 
@@ -42,6 +45,8 @@ type
     property ErrorCode: Integer read FCode;
     property ErrorDescription: String read FError;
     property RawResponce: TJSONObject read FRawResponce;
+    property EventLog: TEventLog read FEventLog write FEventLog;
+    property DebugLog: Boolean read FDebugLog write FDebugLog;
   end;
 
   { Procedure style }
@@ -174,10 +179,18 @@ begin
     try
       Result:=aHTTP.SimpleGet(aUrl);
     except
+      on E:Exception do
+        Log(etError, E.ClassName+': '+E.Message);
     end;
   finally
     aHTTP.Free;
   end;
+end;
+
+procedure TTonAPI.Log(aEventType: TEventType; const aMessage: String);
+begin
+  if (FDebugLog or (aEventType<>etDebug)) and Assigned(FEventLog) then
+    FEventLog.Log(aEventType, aMessage);
 end;
 
 destructor TTonAPI.Destroy;
