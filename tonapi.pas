@@ -153,6 +153,8 @@ begin
   FCode:=0;
   FreeAndNil(FRawResponce);
   FRawResponce:=GetJSON(EndpointGet(aUrl)) as TJSONObject;
+  if not Assigned(FRawResponce) then
+    Exit;
   if not FRawResponce.Booleans['ok'] then
   begin
     FError:=FRawResponce.Get('error', EmptyStr);
@@ -202,6 +204,7 @@ end;
 function TTonAPI.getAddressInformation(const aAddress: String; aResult: TgetAddressInformationResult): Boolean;
 begin
   FreeAndNil(FRawResponce);
+  Log(etDebug, 'getAddressInformation. Address: '+aAddress);
   Result:=APIMethod(RoteEndpoint('getAddressInformation', aAddress), aResult);
 end;
 
